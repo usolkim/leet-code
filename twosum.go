@@ -5,7 +5,6 @@ import (
 )
 
 func main(){
-    fmt.Println("main")
     var nums = []int{3, 1, 7, 11, 2, 15}
     fmt.Println(twoSum(nums, 9))
 }
