@@ -24,12 +24,12 @@ func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 	len1 := len(nums1)
 	len2 := len(nums2)
 	if len1 > len2 {
-		nums_t := nums1
+		numsT := nums1
 		nums1 = nums2
-		nums2 = nums_t
-		len_t := len1
+		nums2 = numsT
+		lenT := len1
 		len1 = len2
-		len2 = len_t
+		len2 = lenT
 	}
 
 	var start, end, m2d int = 0, len1, int((len1 + len2 + 1) / 2)
