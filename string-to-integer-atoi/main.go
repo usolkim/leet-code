@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
 func main() {
@@ -37,31 +36,47 @@ func main() {
 }
 
 func myAtoi(str string) int {
-	var dirty bool
+	var allow_blank, zeros bool = true, true
 	var start, end, symbol int = -1, -1, 0
-	// var start, end, minus, plus int = -1, -1, 1, 1
+
 	for i, ch := range str {
-		if !dirty {
-			switch {
-			case symbol == 0 && ch == 32:
-				continue
-			case symbol == 0 && (ch == 43 || ch == 45):
-				symbol = 44 - int(ch)
-			case symbol == 0 && ch == 48:
-				dirty = true
-			case ch > 48 && ch <= 57:
-				start = i
-				end = i
-				dirty = true
+		switch {
+			case ch == 32 :
+				if !allow_blank {
+					goto OUT
+				}
+			case ch == 43 || ch == 45 :
+				if symbol == 0 {
+					allow_blank = false
+					symbol = 44 - int(ch)
+				} else {
+					goto OUT
+				}
+			case ch == 48 :
+				if symbol == 0 {
+					symbol = 1
+				}
+				allow_blank = false
+				if zeros {
+					continue
+				}
+				fallthrough
+			case ch > 48 && ch <=57 :
+				zeros = false
+				allow_blank = false
+				if symbol == 0 {
+					symbol = 1
+				}
+				if start < 0 {
+					start = i
+				}
+				end = i + 1
 			default:
-				return 0
-			}
-		} else if ch < 48 || ch > 57 {
-			break
-		} else {
-			end++
+				goto OUT
 		}
 	}
+
+OUT:
 
 	if start < 0 {
 		return 0
@@ -77,21 +92,22 @@ func myAtoi(str string) int {
 		}
 	}
 
-	v := str[start : end+1]
+	var i64 int64 = 0
 
-	res, err := strconv.ParseInt(v, 10, 64)
-
-	if err != nil {
-		return 0
+	for i, v := range str[start : end] {
+		i64 += int64(v) - 48
+		if i < end-start-1 {
+			i64 *= 10
+		}
 	}
 
-	res *= int64(symbol)
+	i64 *= int64(symbol)
 
-	if res < int64(min_32) {
+	if i64 < int64(min_32) {
 		return min_32
-	} else if res > int64(max_32) {
+	} else if i64 > int64(max_32) {
 		return max_32
 	}
 
-	return int(res)
+	return int(i64)
 }
