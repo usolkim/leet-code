@@ -45,16 +45,3 @@ func swapPairs(head *ListNode) *ListNode {
 
 	return ret
 }
-
-// func jump(head *ListNode, n int) *ListNode {
-// 	if head == nil {
-// 		return nil
-// 	}
-// 	curr := head
-// 	for i := 0; i < n; i++ {
-// 		if curr.Next == nil {
-// 			return curr
-// 		}
-// 		curr = curr.Next
-// 	}
-// }
