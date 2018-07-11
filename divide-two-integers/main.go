@@ -3,6 +3,8 @@ package main
 import "fmt"
 
 func main() {
+	fmt.Println(divide(-2147483648, -1))
+	fmt.Println(divide(-2147483648, 2))
 	fmt.Println(divide(10, 3))
 	fmt.Println(divide(10, 5))
 	fmt.Println(divide(10, 1))
@@ -13,7 +15,6 @@ func main() {
 	fmt.Println(divide(10, -11))
 	fmt.Println(divide(-10, 11))
 	fmt.Println(divide(-10, -11))
-	fmt.Println(divide(-2147483648, 2))
 }
 
 func divide(dividend int, divisor int) int {
@@ -29,31 +30,26 @@ func divide(dividend int, divisor int) int {
 		sign *= -1
 		divisor *= -1
 	}
-	// max := 1<<31 - 1
-	divisorB := divisor
-	for i := 0; i < 31; i++ {
-		if dividend > divisorB {
-			divisorB = divisorB << 1
-		} else {
-			break
-		}
+
+	i := 0
+	for dividend > divisor<<uint(i) {
+		i++
 	}
 
 	ret := 0
 	for dividend >= divisor {
-		if dividend >= divisorB {
-			dividend -= divisorB
-			ret++
-			ret = ret << 1
+		tmpDivisor := divisor << uint(i)
+		if dividend >= tmpDivisor {
+			dividend -= tmpDivisor
+			ret += 1 << uint(i)
 		}
-		divisorB = divisorB >> 1
+		i--
 	}
-	// for dividend >= divisor {
-	// 	dividend -= divisor
-	// 	if ret < max {
-	// 		ret++
-	// 	}
-	// }
+
 	ret *= sign
+	max := 1<<31 - 1
+	if ret > max {
+		return max
+	}
 	return ret
 }
