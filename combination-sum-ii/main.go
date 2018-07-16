@@ -31,35 +31,30 @@ func combinationSum2(candidates []int, target int) [][]int {
 		m[v]++
 	}
 
-	return calc(candidates, m, target)
+	ret := make([][]int, 0)
+	r := make([]int, 0)
+
+	calc(&ret, candidates, r, m, target)
+
+	return ret
 }
 
-func calc(c []int, m map[int]int, target int) [][]int {
+func calc(ret *[][]int, c []int, r []int, m map[int]int, target int) {
 	l := len(c)
-	ret := make([][]int, 0)
 
 	k := c[0]
 	v := m[k]
 	for i := 0; i <= v; i++ {
 		e := k * i
 		if e == target {
-			tmp := make([]int, 0)
-			for j := 0; j < i; j++ {
-				tmp = append(tmp, k)
-			}
-			ret = append(ret, tmp)
-		} else if e < target && v < l {
-			r := calc(c[v:l], m, target-e)
-			for _, vj := range r {
-				tmp := make([]int, 0)
-				for j := 0; j < i; j++ {
-					tmp = append(tmp, k)
-				}
-				tmp = append(tmp, vj...)
-				ret = append(ret, tmp)
-			}
+			r = append(r, c[:i]...)
+			*ret = append(*ret, r)
+			return
+		} else if e < target && v < l && c[v] <= target-e {
+			tmp := make([]int, len(r))
+			copy(tmp, r)
+			tmp = append(tmp, c[:i]...)
+			calc(ret, c[v:], tmp, m, target-e)
 		}
 	}
-
-	return ret
 }
