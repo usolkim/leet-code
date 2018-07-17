@@ -1,15 +1,15 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	fmt.Println(jump([]int{2}))
+	fmt.Println(jump([]int{}))
+	fmt.Println(jump([]int{1}))
 	fmt.Println(jump([]int{1, 1}))
 	fmt.Println(jump([]int{2, 3, 1, 1, 4}))
-	fmt.Println(jump([]int{3, 1, 5, 1, 2, 3, 1, 4, 2}))
-	fmt.Println(jump([]int{30, 1, 1, 1, 1, 1, 1, 5, 1, 2, 3, 1, 4, 2}))
+	fmt.Println(jump([]int{3, 1, 1, 2, 1, 4, 6, 6, 6}))
+	fmt.Println(jump([]int{3, 1, 5, 2, 1, 4, 6, 6, 6}))
+	fmt.Println(jump([]int{10, 1, 1, 2, 1, 4, 6, 6, 6}))
 }
 
 func jump(nums []int) int {
@@ -18,21 +18,20 @@ func jump(nums []int) int {
 		return 0
 	}
 
-	s := 1
+	s := 0
 	max := nums[0]
-	count := 1
+	jump := 1
 
-	for max < l-1 {
-		omax := max
-		max = 0
-		for i := s; i <= omax; i++ {
-			if max < i+nums[i] {
-				max = i + nums[i]
+	for s+max < l-1 {
+		max = -1
+		for j := 1; j <= nums[s]; j++ {
+			if max < nums[s+j] {
+				max = nums[s+j]
 			}
 		}
-		s = omax + 1
-		count++
+		s = s + max
+		jump++
 	}
 
-	return count
+	return jump
 }
