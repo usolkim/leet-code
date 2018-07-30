@@ -5,31 +5,32 @@ import (
 )
 
 func main() {
+	fmt.Println(combine(4, 0))
+	fmt.Println(combine(4, 1))
 	fmt.Println(combine(4, 2))
 	fmt.Println(combine(5, 3))
 }
 
 func combine(n int, k int) [][]int {
-	if k == 0 {
-		return [][]int{[]int{}}
-	} else if k == 1 {
-		res := make([][]int, 0)
-		for i := 1; i <= n; i++ {
-			res = append(res, []int{i})
-		}
-		return res
-	}
 	res := make([][]int, 0)
-	c := combine(n, k-1)
-	for i := 1; i <= n-k+1; i++ {
-		for _, v := range c {
-			if v[0] > i {
-				r := make([]int, 0)
-				r = append(r, i)
-				r = append(r, v...)
-				res = append(res, r)
-			}
+
+	tmp := make([]int, k)
+
+	var backt func(int, int)
+	backt = func(i, v int) {
+		if i == k+1 {
+			tmp2 := make([]int, k)
+			copy(tmp2, tmp)
+			res = append(res, tmp2)
+			return
+		}
+
+		for j := v; j <= n-k+i; j++ {
+			tmp[i-1] = j
+			backt(i+1, j+1)
 		}
 	}
+
+	backt(1, 1)
 	return res
 }
