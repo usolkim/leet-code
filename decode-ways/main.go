@@ -27,6 +27,7 @@ func numDecodings(s string) int {
 	}
 
 	ar := make([]int, l+1)
+
 	ar[l] = 1
 
 	if s[l-1] != '0' {
